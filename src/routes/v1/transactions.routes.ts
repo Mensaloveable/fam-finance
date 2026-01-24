@@ -1,6 +1,6 @@
 import { Router, Request } from "express";
-import prisma from "../lib/prisma.js";
-import { auth } from "../middleware/auth.js";
+import prisma from "../../lib/prisma.js";
+import { auth } from "../../middleware/auth.js";
 
 interface AuthRequest extends Request {
   user?: { id: string; email: string }; // From middleware

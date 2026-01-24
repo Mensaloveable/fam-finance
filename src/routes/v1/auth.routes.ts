@@ -1,7 +1,7 @@
 import { Router } from "express";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
-import prisma from "../lib/prisma.js";
+import prisma from "../../lib/prisma.js";
 
 interface SignupBody {
   email: string;
