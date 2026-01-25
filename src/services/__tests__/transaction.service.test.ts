@@ -1,6 +1,6 @@
-import { TransactionService } from "../transaction.service";
-import { PrismaClient, Prisma } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import prisma from "../../lib/prisma";
+import { TransactionService } from "../transaction.service.js";
 
 jest.mock("../../lib/prisma", () => ({
   __esModule: true,

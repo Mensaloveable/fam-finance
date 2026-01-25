@@ -1,7 +1,8 @@
-import { AuthService } from "../auth.service";
+import { Prisma } from "@prisma/client";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import prisma from "../../lib/prisma.js";
+import { AuthService } from "../auth.service.js";
 
 jest.mock("bcryptjs");
 jest.mock("jsonwebtoken");
@@ -95,7 +96,7 @@ describe("AuthService", () => {
         email: data.email,
         name: "Test User",
         password: "hashed",
-        balance: new (await import("@prisma/client")).Prisma.Decimal(0),
+        balance: new Prisma.Decimal(0),
       };
       const token = "jwt-token";
 
