@@ -1,8 +1,8 @@
-import { TransactionService } from '../transaction.service';
-import { PrismaClient, Prisma } from '@prisma/client';
-import prisma from '../../lib/prisma';
+import { Prisma } from "@prisma/client";
+import prisma from "../../lib/prisma";
+import { TransactionService } from "../transaction.service.js";
 
-jest.mock('../../lib/prisma', () => ({
+jest.mock("../../lib/prisma", () => ({
   __esModule: true,
   default: {
     transaction: {
@@ -18,7 +18,7 @@ jest.mock('../../lib/prisma', () => ({
 
 const mockPrisma = prisma as jest.Mocked<typeof prisma>;
 
-describe('TransactionService', () => {
+describe("TransactionService", () => {
   let service: TransactionService;
 
   beforeEach(() => {
@@ -26,15 +26,22 @@ describe('TransactionService', () => {
     jest.clearAllMocks();
   });
 
-  describe('getAll', () => {
-    it('should return transactions and balance', async () => {
+  describe("getAll", () => {
+    it("should return transactions and balance", async () => {
       const mockTransactions = [
-        { id: '1', type: 'income', amount: new Prisma.Decimal(100), date: new Date() },
+        {
+          id: "1",
+          type: "income",
+          amount: new Prisma.Decimal(100),
+          date: new Date(),
+        },
       ];
       const mockIncomeAgg = { _sum: { amount: new Prisma.Decimal(100) } };
       const mockExpenseAgg = { _sum: { amount: new Prisma.Decimal(50) } };
 
-      (prisma.transaction.findMany as jest.Mock).mockResolvedValue(mockTransactions);
+      (prisma.transaction.findMany as jest.Mock).mockResolvedValue(
+        mockTransactions,
+      );
       (prisma.transaction.aggregate as jest.Mock)
         .mockResolvedValueOnce(mockIncomeAgg)
         .mockResolvedValueOnce(mockExpenseAgg);
@@ -43,7 +50,7 @@ describe('TransactionService', () => {
       const result = await service.getAll();
 
       expect(mockPrisma.transaction.findMany).toHaveBeenCalledWith({
-        orderBy: { date: 'desc' },
+        orderBy: { date: "desc" },
       });
       expect(mockPrisma.transaction.aggregate).toHaveBeenCalledTimes(2);
       expect(mockPrisma.user.updateMany).toHaveBeenCalledWith({
@@ -56,44 +63,48 @@ describe('TransactionService', () => {
     });
   });
 
-  describe('create', () => {
-    it('should create a transaction and return result', async () => {
+  describe("create", () => {
+    it("should create a transaction and return result", async () => {
       const mockTransaction = {
-        id: '1',
-        type: 'income',
-        category: 'salary',
+        id: "1",
+        type: "income",
+        category: "salary",
         amount: new Prisma.Decimal(100),
-        addedBy: 'user@example.com',
-        userId: 'user1',
+        addedBy: "user@example.com",
+        userId: "user1",
         date: new Date(),
       };
       const mockBalance = new Prisma.Decimal(100);
 
-      (prisma.transaction.create as jest.Mock).mockResolvedValue(mockTransaction);
+      (prisma.transaction.create as jest.Mock).mockResolvedValue(
+        mockTransaction,
+      );
       // Mock getAll to return balance
-      jest.spyOn(service, 'getAll').mockResolvedValue({ transactions: [], balance: mockBalance });
+      jest
+        .spyOn(service, "getAll")
+        .mockResolvedValue({ transactions: [], balance: mockBalance });
 
       const data = {
-        type: 'income' as const,
-        category: 'salary',
+        type: "income" as const,
+        category: "salary",
         amount: 100,
-        userId: 'user1',
-        userEmail: 'user@example.com',
+        userId: "user1",
+        userEmail: "user@example.com",
       };
 
       const result = await service.create(data);
 
       expect(mockPrisma.transaction.create).toHaveBeenCalledWith({
         data: {
-          type: 'income',
-          category: 'salary',
+          type: "income",
+          category: "salary",
           amount: 100,
-          addedBy: 'user@example.com',
-          userId: 'user1',
+          addedBy: "user@example.com",
+          userId: "user1",
         },
       });
       expect(result).toEqual({
-        msg: 'Added',
+        msg: "Added",
         transaction: mockTransaction,
         balance: mockBalance,
       });
