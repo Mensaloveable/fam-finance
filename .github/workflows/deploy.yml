@@ -1,0 +1,35 @@
+name: Run tests
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      JWT_SECRET: ${{ secrets.JWT_SECRET }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run tests
+        run: |
+          npm install
+          npm test
+
+# name: Deploy to Render
+
+# on:
+#   push:
+#     branches: [ main ]
+
+# jobs:
+#   deploy:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - uses: actions/checkout@v4
+#       - name: Deploy to Render
+#         uses: render-actions/deploy@v2
+#         with:
+#           service-id: ${{ secrets.RENDER_SERVICE_ID }}
+#           api-key: ${{ secrets.RENDER_API_KEY }}
