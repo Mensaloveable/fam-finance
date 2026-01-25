@@ -1,8 +1,9 @@
-import { TransactionController } from '../transaction.controller.js';
-import { TransactionService } from '../../services/transaction.service.js';
+import { TransactionController } from '../transaction.controller';
+import { TransactionService } from '../../services/transaction.service';
 import { Request, Response } from 'express';
+import { Prisma } from '@prisma/client';
 
-jest.mock('../../services/transaction.service.js');
+jest.mock('../../services/transaction.service');
 
 const mockTransactionService = TransactionService as jest.MockedClass<typeof TransactionService>;
 
@@ -26,7 +27,7 @@ describe('TransactionController', () => {
 
   describe('getAll', () => {
     it('should return transactions', async () => {
-      const mockResult = { transactions: [], balance: 0 };
+      const mockResult = { transactions: [], balance: new Prisma.Decimal(0) };
       mockTransactionService.prototype.getAll.mockResolvedValue(mockResult);
 
       await controller.getAll(mockReq as Request, mockRes as Response);
@@ -49,7 +50,7 @@ describe('TransactionController', () => {
     it('should create transaction', async () => {
       const mockUser = { id: '1', email: 'user@example.com' };
       const mockBody = { type: 'income', category: 'salary', amount: 100 };
-      const mockResult = { msg: 'Added', transaction: {}, balance: 100 };
+      const mockResult = { msg: 'Added', transaction: {} as any, balance: new Prisma.Decimal(100) };
       mockReq = { user: mockUser, body: mockBody };
       mockTransactionService.prototype.create.mockResolvedValue(mockResult);
 

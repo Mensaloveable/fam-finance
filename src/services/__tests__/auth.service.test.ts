@@ -1,11 +1,11 @@
-import { AuthService } from '../auth.service.js';
+import { AuthService } from '../auth.service';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import prisma from '../../lib/prisma.js';
 
 jest.mock('bcryptjs');
 jest.mock('jsonwebtoken');
-jest.mock('../../lib/prisma.js', () => ({
+jest.mock('../../lib/prisma', () => ({
   __esModule: true,
   default: {
     user: {

@@ -12,9 +12,11 @@ jobs:
       JWT_SECRET: ${{ secrets.JWT_SECRET }}
     steps:
       - uses: actions/checkout@v4
-      - name: Run tests
+      - name: Install dependencies
         run: |
           npm install
+      - name: Run tests
+        run: |
           npm test
 
 # name: Deploy to Render
