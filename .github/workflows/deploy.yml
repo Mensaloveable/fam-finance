@@ -1,11 +1,14 @@
-name: Run tests
+name: CI/CD Pipeline
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
+      - "feature/*"
 
 jobs:
-  build:
+  test:
+    name: Run Tests
     runs-on: ubuntu-latest
     env:
       DATABASE_URL: ${{ secrets.DATABASE_URL }}
@@ -22,19 +25,28 @@ jobs:
         run: |
           npm test
 
-# name: Deploy to Render
+  deploy-dev:
+    name: Deploy to Dev
+    needs: test
+    if: startsWith(github.ref, 'refs/heads/feature/')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Deploy to Render (Dev)
+        uses: render-actions/deploy@v2
+        with:
+          service-id: ${{ secrets.RENDER_SERVICE_ID }}
+          api-key: ${{ secrets.RENDER_API_KEY }}
 
-# on:
-#   push:
-#     branches: [ main ]
-
-# jobs:
-#   deploy:
-#     runs-on: ubuntu-latest
-#     steps:
-#       - uses: actions/checkout@v4
-#       - name: Deploy to Render
-#         uses: render-actions/deploy@v2
-#         with:
-#           service-id: ${{ secrets.RENDER_SERVICE_ID }}
-#           api-key: ${{ secrets.RENDER_API_KEY }}
+  deploy-prod:
+    name: Deploy to Production
+    needs: test
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Deploy to Render (Production)
+        uses: render-actions/deploy@v2
+        with:
+          service-id: ${{ secrets.RENDER_SERVICE_ID }}
+          api-key: ${{ secrets.RENDER_API_KEY }}
