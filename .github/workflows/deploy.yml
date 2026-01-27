@@ -33,14 +33,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Deploy to Render (Dev)
-        uses: render-examples/deploy-to-render-action@v1
-        with:
-          service-id: ${{ secrets.RENDER_SERVICE_ID }}
-          api-key: ${{ secrets.RENDER_API_KEY }}
-        # uses: render-actions/deploy@v4
-        # with:
-        # service-id: ${{ secrets.RENDER_SERVICE_ID }}
-        # api-key: ${{ secrets.RENDER_API_KEY }}
+        run: |
+          curl -X POST "https://api.render.com/v1/services/${{ secrets.RENDER_SERVICE_ID }}/deploys" \
+            -H "Authorization: Bearer ${{ secrets.RENDER_API_KEY }}" \
+            -H "Content-Type: application/json"
 
   deploy-prod:
     name: Deploy to Production
@@ -50,7 +46,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Deploy to Render (Production)
-        uses: render-actions/deploy@v4
-        with:
-          service-id: ${{ secrets.RENDER_SERVICE_ID }}
-          api-key: ${{ secrets.RENDER_API_KEY }}
+        run: |
+          curl -X POST "https://api.render.com/v1/services/${{ secrets.RENDER_SERVICE_ID }}/deploys" \
+            -H "Authorization: Bearer ${{ secrets.RENDER_API_KEY }}" \
+            -H "Content-Type: application/json"
