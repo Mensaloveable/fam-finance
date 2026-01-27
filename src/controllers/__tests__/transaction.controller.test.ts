@@ -1,5 +1,5 @@
-import { TransactionController } from "../transaction.controller";
-import { TransactionService } from "../../services/transaction.service";
+import { TransactionController } from "../transaction.controller.js";
+import { TransactionService } from "../../services/transaction.service.js";
 import { Request, Response } from "express";
 import { Prisma } from "@prisma/client";
 
