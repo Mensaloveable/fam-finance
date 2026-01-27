@@ -50,7 +50,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Deploy to Render (Production)
-        uses: render-actions/deploy@v4
+        uses: render-examples/deploy-to-render-action@v1
         with:
           service-id: ${{ secrets.RENDER_SERVICE_ID }}
           api-key: ${{ secrets.RENDER_API_KEY }}
